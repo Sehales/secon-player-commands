@@ -32,7 +32,16 @@ public class PlayerCmdCollection extends SeConAddon {
 	}
 
 	private void initConfig() {
+
 		addConfigNode("virtualchest-name", "<gold>Virtual Chest");
+		addConfigNode("permission.remember.flymode", "secon.remember.flymode");
+		addConfigNode("permission.remember.gamemode", "secon.remember.gamemode");
+		addConfigNode("permission.remember.flying", "secon.remember.flying");
+		addConfigNode("permission.remember.walkspeed", "secon.remember.walkspeed");
+		addConfigNode("permission.remember.flyspeed", "secon.remember.flyspeed");
+		addConfigNode("permission.remember.listname", "secon.remember.listname");
+		addConfigNode("permission.remember.displayname", "secon.remember.displayname");
+
 		saveConfig();
 	}
 
@@ -60,6 +69,13 @@ public class PlayerCmdCollection extends SeConAddon {
 		addLanguageInfoNode("nick.sender-reset-msg", "<gold>You have resetted the display name of <green><player>");
 		addLanguageInfoNode("virtualchest.longer-than-16", "<red>The name can't be longer than 16 characters!");
 		addLanguageInfoNode("slay.player-killed-msg", "<gold>You have killed <player>");
+		addLanguageInfoNode("mute.muted-msg", "<red>You have been muted by <green><sender>");
+		addLanguageInfoNode("mute.sender-muted-msg", "<gold>You have muted <green><player>");
+		addLanguageInfoNode("mute.unmuted-msg", "<gold>You have been unmuted by <green><sender>");
+		addLanguageInfoNode("mute.sender-unmuted-msg", "<gold>You have unmuted <green><player>");
+		addLanguageInfoNode("mute.already-muted", "<green><player> <gold>is already muted");
+		addLanguageInfoNode("mute.muted-info", "<red>You are muted!");
+		addLanguageInfoNode("mute.not-muted", "<green><player> <gold>is not muted");
 	}
 
 	@Override
@@ -84,7 +100,7 @@ public class PlayerCmdCollection extends SeConAddon {
 				e.printStackTrace();
 			}
 			registerCommands(new PlayerCommands(this, this.pcu));
-			registerListener(new PlayerListener(this, this.pcu));
+			registerListener(new PlayerListener(this));
 			return true;
 		}
 	}

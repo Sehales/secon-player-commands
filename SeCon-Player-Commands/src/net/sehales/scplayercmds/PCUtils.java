@@ -47,11 +47,11 @@ public class PCUtils {
 	 */
 	public int convertGameModeStringToInt(String option) {
 		int value = -1;
-		if (option.equalsIgnoreCase("survival") || option.equalsIgnoreCase("0"))
+		if (option.equalsIgnoreCase("survival") || option.equalsIgnoreCase("0") || option.equalsIgnoreCase("s"))
 			value = 0;
-		else if (option.equalsIgnoreCase("creative") || option.equalsIgnoreCase("1"))
+		else if (option.equalsIgnoreCase("creative") || option.equalsIgnoreCase("1") || option.equalsIgnoreCase("c"))
 			value = 1;
-		else if (option.equalsIgnoreCase("adventure") || option.equalsIgnoreCase("2"))
+		else if (option.equalsIgnoreCase("adventure") || option.equalsIgnoreCase("2") || option.equalsIgnoreCase("a"))
 			value = 2;
 		return value;
 	}

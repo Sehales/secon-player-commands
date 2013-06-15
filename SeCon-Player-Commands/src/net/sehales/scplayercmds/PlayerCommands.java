@@ -9,6 +9,7 @@ import net.sehales.secon.annotations.SeConCommandHandler;
 import net.sehales.secon.config.LanguageHelper;
 import net.sehales.secon.enums.CommandType;
 import net.sehales.secon.exception.CommandNotFoundException;
+import net.sehales.secon.player.SeConPlayer;
 import net.sehales.secon.utils.ChatUtils;
 
 import org.bukkit.Bukkit;
@@ -135,12 +136,14 @@ public class PlayerCommands {
 					}
 					float f = utils.parseSpeedValue(args[1]);
 					p.setFlySpeed(f);
+
 					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("flyspeed.changed").replace("<player>", p.getName()).replace("<value>", args[1]));
 				}
 			} else if (sender instanceof Player) {
 				Player p = ((Player) sender).getPlayer();
 				float f = utils.parseSpeedValue(args[0]);
 				p.setFlySpeed(f);
+
 				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("flyspeed.changed").replace("<player>", p.getName()).replace("<value>", args[0]));
 			}
 		} else
@@ -213,6 +216,27 @@ public class PlayerCommands {
 		}
 	}
 
+	@SeConCommandHandler(name = "mute", help = "<darkaqua>mute another player;<darkaqua>usage: /mute [player]", permission = "secon.command.mute")
+	public void onMuteCmd(CommandSender sender, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+			Player p = Bukkit.getPlayer(args[0]);
+			if (p == null) {
+				chat.sendFormattedMessage(sender, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+				return;
+			}
+
+			SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(args[0]);
+
+			if (scp.hasData("muted"))
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("mute.already-muted").replace("<player>", p.getName()));
+			else {
+				scp.setData("muted", true);
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("mute.sender-muted-msg").replace("<player>", p.getName()));
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("mute.muted-msg").replace("<sender>", sender.getName()));
+			}
+		}
+	}
+
 	@SeConCommandHandler(name = "nick", help = "<darkaqua>change your name or the name of another player;<darkaqua>usage: /nick [player] newName", additionalPerms = "other:secon.command.nick.other", permission = "secon.command.nick", aliases = "playername")
 	public void onNickCmd(CommandSender sender, SeConCommand cmd, String[] args) {
 		if (args.length > 0) {
@@ -230,6 +254,11 @@ public class PlayerCommands {
 					}
 					p.setDisplayName(name);
 					p.setPlayerListName(name);
+
+					SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(p.getName());
+					scp.setData("listname", name);
+					scp.setData("displayname", name);
+
 					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("nick.sender-changed-msg").replace("<player>", p.getName()).replace("<nick>", p.getDisplayName()));
 					chat.sendFormattedMessage(p, pc.getLanguageInfoNode("nick.changed-msg").replace("<sender>", sender.getName()).replace("<nick>", p.getDisplayName()));
 				}
@@ -242,6 +271,11 @@ public class PlayerCommands {
 				}
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
+
+				SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(p.getName());
+				scp.setData("listname", name);
+				scp.setData("displayname", name);
+
 				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("nick.changed-msg").replace("<sender>", p.getName()).replace("<nick>", p.getDisplayName()));
 			}
 		} else
@@ -260,6 +294,7 @@ public class PlayerCommands {
 				String name = p.getName();
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
+
 				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("nick.sender-reset-msg").replace("<player>", p.getName()));
 				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("nick.reset-msg").replace("<sender>", sender.getName()));
 			}
@@ -268,6 +303,7 @@ public class PlayerCommands {
 			String name = p.getName();
 			p.setDisplayName(name);
 			p.setPlayerListName(name);
+
 			chat.sendFormattedMessage(p, pc.getLanguageInfoNode("nick.reset-msg").replace("<sender>", p.getName()).replace("<nick>", p.getDisplayName()));
 		}
 	}
@@ -337,6 +373,26 @@ public class PlayerCommands {
 			chat.sendFormattedMessage(sender, LanguageHelper.INFO_WRONG_ARGUMENTS);
 	}
 
+	@SeConCommandHandler(name = "unmute", help = "<darkaqua>unmute another player;<darkaqua>usage: /unmute [player]", permission = "secon.command.unmute")
+	public void onUnmuteCmd(CommandSender sender, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+			Player p = Bukkit.getPlayer(args[0]);
+			if (p == null) {
+				chat.sendFormattedMessage(sender, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+				return;
+			}
+
+			SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(args[0]);
+
+			if (scp.hasData("muted")) {
+				scp.removeData("muted");
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("mute.sender-unmuted-msg").replace("<player>", p.getName()));
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("mute.unmuted-msg").replace("<sender>", sender.getName()));
+			} else
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("mute.not-muted").replace("<player>", p.getName()));
+		}
+	}
+
 	@SeConCommandHandler(name = "virtualchest", help = "<darkaqua>open your virtual double chest or the virtual double chest of another player;<darkaqua>usage: /virtualchest [player]", aliases = "vchest", additionalPerms = "other:secon.command.virtualchest.other", permission = "secon.command.virtualchest", type = CommandType.PLAYER)
 	public void onVirtualChestCmd(Player player, SeConCommand cmd, String[] args) {
 		if (args.length > 0) {
@@ -364,12 +420,14 @@ public class PlayerCommands {
 					}
 					float f = utils.parseSpeedValue(args[1]);
 					p.setWalkSpeed(f);
+
 					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("walkspeed.changed").replace("<player>", p.getName()).replace("<value>", args[1]));
 				}
 			} else if (sender instanceof Player) {
 				Player p = ((Player) sender).getPlayer();
 				float f = utils.parseSpeedValue(args[0]);
 				p.setWalkSpeed(f);
+
 				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("walkspeed.changed").replace("<player>", p.getName()).replace("<value>", args[0]));
 			}
 		} else
