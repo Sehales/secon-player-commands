@@ -7,7 +7,6 @@ import net.sehales.secon.addon.SeConAddonManager;
 import net.sehales.secon.addon.SeConCommand;
 import net.sehales.secon.annotations.SeConCommandHandler;
 import net.sehales.secon.config.LanguageHelper;
-import net.sehales.secon.enums.CommandType;
 import net.sehales.secon.exception.CommandNotFoundException;
 import net.sehales.secon.player.SeConPlayer;
 import net.sehales.secon.utils.ChatUtils;
@@ -40,6 +39,22 @@ public class PlayerCommands {
 			p.chat(chat.getStringOfArray(args, 1));
 		} else
 			chat.sendFormattedMessage(sender, LanguageHelper.INFO_WRONG_ARGUMENTS);
+	}
+
+	@SeConCommandHandler(name = "checkvisibility", help = "<darkaqua>check the invisiblity state of a player;<darkaqua>usage: /checkvisibility [player]", permission = "secon.command.checkvisibility", aliases = "isvisible,isinvisible,ishidden")
+	public void onCheckVisibilityCmd(CommandSender sender, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+			Player p = Bukkit.getPlayer(args[0]);
+			if (p == null) {
+				chat.sendFormattedMessage(sender, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+				return;
+			}
+
+			if (pc.getInvManager().isHidden(p))
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.not-visible-msg").replace("<player>", p.getName()));
+			else
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.not-invisible-msg").replace("<player>", p.getName()));
+		}
 	}
 
 	@SeConCommandHandler(name = "closeview", help = "<darkaqua>close the inventory (view) of a player;<darkaqua>usage: /closeview [player]", permission = "secon.command.closeview", aliases = "closeinventory")
@@ -97,13 +112,13 @@ public class PlayerCommands {
 					return;
 				}
 				p.setFoodLevel(20);
-				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("feed.feeded-msg").replace("<sender>", sender.getName()));
-				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("feed.sender-feeded-msg").replace("<player>", p.getName()));
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("feed.fed-msg").replace("<sender>", sender.getName()));
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("feed.sender-fed-msg").replace("<player>", p.getName()));
 			}
 		} else if (sender instanceof Player) {
 			Player p = ((Player) sender).getPlayer();
 			p.setSaturation(20);
-			chat.sendFormattedMessage(p, pc.getLanguageInfoNode("feed.feeded-msg").replace("<sender>", sender.getName()));
+			chat.sendFormattedMessage(p, pc.getLanguageInfoNode("feed.fed-msg").replace("<sender>", sender.getName()));
 		}
 	}
 
@@ -216,6 +231,58 @@ public class PlayerCommands {
 		}
 	}
 
+	@SeConCommandHandler(name = "hide", help = "<darkaqua>make yourself or another player invisible;<darkaqua>usage: /hide [player]", permission = "secon.command.hide", additionalPerms = "other:secon.command.hide.other")
+	public void onHideCmd(CommandSender sender, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+			if (SeCon.getAPI().getSeConUtils().hasPermission(sender, cmd.getPermission("other"), true)) {
+				Player p = Bukkit.getPlayer(args[0]);
+				if (p == null) {
+					chat.sendFormattedMessage(sender, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+					return;
+				}
+
+				if (pc.getInvManager().hide(p)) {
+					chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.invisible-msg").replace("<sender>", sender.getName()));
+					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.sender-invisible-msg").replace("<player>", sender.getName()));
+				} else
+					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.not-visible-msg").replace("<player>", p.getName()));
+			}
+		} else if (sender instanceof Player) {
+			Player p = ((Player) sender).getPlayer();
+			if (pc.getInvManager().hide(p))
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.invisible-msg").replace("<sender>", sender.getName()));
+			else
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.not-visible-msg").replace("<player>", p.getName()));
+		}
+	}
+
+	@SeConCommandHandler(name = "invisibility", help = "<darkaqua>make yourself or another player invisible;<darkaqua>usage: /invisibility [player]", aliases = "inv,vanish", permission = "secon.command.invisibility", additionalPerms = "other:secon.command.invisibility.other")
+	public void onInvisibilityCmd(CommandSender sender, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+			if (SeCon.getAPI().getSeConUtils().hasPermission(sender, cmd.getPermission("other"), true)) {
+				Player p = Bukkit.getPlayer(args[0]);
+				if (p == null) {
+					chat.sendFormattedMessage(sender, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+					return;
+				}
+
+				if (pc.getInvManager().toggleInvisibility(p)) {
+					chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.invisible-msg").replace("<sender>", sender.getName()));
+					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.sender-invisible-msg").replace("<player>", sender.getName()));
+				} else {
+					chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.visible-msg").replace("<sender>", sender.getName()));
+					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.sender-visible-msg").replace("<player>", sender.getName()));
+				}
+			}
+		} else if (sender instanceof Player) {
+			Player p = ((Player) sender).getPlayer();
+			if (pc.getInvManager().toggleInvisibility(p))
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.invisible-msg").replace("<sender>", sender.getName()));
+			else
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.visible-msg").replace("<sender>", sender.getName()));
+		}
+	}
+
 	@SeConCommandHandler(name = "mute", help = "<darkaqua>mute another player;<darkaqua>usage: /mute [player]", permission = "secon.command.mute")
 	public void onMuteCmd(CommandSender sender, SeConCommand cmd, String[] args) {
 		if (args.length > 0) {
@@ -308,6 +375,31 @@ public class PlayerCommands {
 		}
 	}
 
+	@SeConCommandHandler(name = "show", help = "<darkaqua>make yourself or another player visible;<darkaqua>usage: /show [player]", permission = "secon.command.show", additionalPerms = "other:secon.command.show.other")
+	public void onShowCmd(CommandSender sender, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+			if (SeCon.getAPI().getSeConUtils().hasPermission(sender, cmd.getPermission("other"), true)) {
+				Player p = Bukkit.getPlayer(args[0]);
+				if (p == null) {
+					chat.sendFormattedMessage(sender, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+					return;
+				}
+
+				if (pc.getInvManager().hide(p)) {
+					chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.visible-msg").replace("<sender>", sender.getName()));
+					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.sender-visible-msg").replace("<player>", sender.getName()));
+				} else
+					chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.not-invisible-msg").replace("<player>", p.getName()));
+			}
+		} else if (sender instanceof Player) {
+			Player p = ((Player) sender).getPlayer();
+			if (pc.getInvManager().hide(p))
+				chat.sendFormattedMessage(p, pc.getLanguageInfoNode("invisiblity.visible-msg").replace("<sender>", sender.getName()));
+			else
+				chat.sendFormattedMessage(sender, pc.getLanguageInfoNode("invisiblity.not-invisible-msg").replace("<player>", p.getName()));
+		}
+	}
+
 	@SeConCommandHandler(name = "slay", help = "<darkaqua>kill another player or yourself;<darkaqua>usage: /slay [player]", permission = "secon.command.slay", additionalPerms = "other:secon.command.slay.other", aliases = "kill")
 	public void onSlayCmd(CommandSender sender, SeConCommand cmd, String[] args) {
 		if (args.length > 0) {
@@ -393,7 +485,7 @@ public class PlayerCommands {
 		}
 	}
 
-	@SeConCommandHandler(name = "virtualchest", help = "<darkaqua>open your virtual double chest or the virtual double chest of another player;<darkaqua>usage: /virtualchest [player]", aliases = "vchest", additionalPerms = "other:secon.command.virtualchest.other", permission = "secon.command.virtualchest", type = CommandType.PLAYER)
+	//	@SeConCommandHandler(name = "virtualchest", help = "<darkaqua>open your virtual double chest or the virtual double chest of another player;<darkaqua>usage: /virtualchest [player]", aliases = "vchest", additionalPerms = "other:secon.command.virtualchest.other", permission = "secon.command.virtualchest", type = CommandType.PLAYER)
 	public void onVirtualChestCmd(Player player, SeConCommand cmd, String[] args) {
 		if (args.length > 0) {
 			if (SeCon.getAPI().getSeConUtils().hasPermission(player, cmd.getPermission("other"), true)) {

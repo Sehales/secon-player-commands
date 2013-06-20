@@ -47,7 +47,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler()
-	public void onPlayerJon(PlayerJoinEvent e) {
+	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(p.getName());
 
@@ -115,7 +115,12 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler()
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoinMonitor(PlayerJoinEvent e) {
+		pc.getInvManager().processPlayerJoin(e.getPlayer());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(p.getName());
@@ -141,5 +146,8 @@ public class PlayerListener implements Listener {
 
 		if (su.hasPermission(p, pc.getConf().getString("permission.remember.displayname"), false))
 			scp.setData("displayname", p.getDisplayName());
+
+		if (su.hasPermission(p, pc.getConf().getString("permission.remember.invisibility"), false) && pc.getInvManager().isHidden(p))
+			scp.setData("invisible", true);
 	}
 }

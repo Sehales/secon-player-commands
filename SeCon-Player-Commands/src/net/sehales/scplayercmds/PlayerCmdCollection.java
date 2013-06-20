@@ -3,7 +3,6 @@ package net.sehales.scplayercmds;
 import net.sehales.secon.SeCon;
 import net.sehales.secon.addon.SeConAddon;
 import net.sehales.secon.annotations.SeConAddonHandler;
-import net.sehales.secon.exception.DatabaseException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -13,6 +12,7 @@ public class PlayerCmdCollection extends SeConAddon {
 
 	private PCUtils             pcu;
 	private VirtualChestHandler vch;
+	private InvisibilityManager invManager;
 
 	void addConfigNode(String path, Object value) {
 		if (!configContains(path))
@@ -25,6 +25,10 @@ public class PlayerCmdCollection extends SeConAddon {
 
 	FileConfiguration getConf() {
 		return getConfig();
+	}
+
+	public InvisibilityManager getInvManager() {
+		return invManager;
 	}
 
 	public VirtualChestHandler getVirtualChestHandler() {
@@ -41,6 +45,8 @@ public class PlayerCmdCollection extends SeConAddon {
 		addConfigNode("permission.remember.flyspeed", "secon.remember.flyspeed");
 		addConfigNode("permission.remember.listname", "secon.remember.listname");
 		addConfigNode("permission.remember.displayname", "secon.remember.displayname");
+		addConfigNode("permission.remember.invisibility", "secon.remember.invisibility");
+		addConfigNode("permission.invisibility.see", "secon.command.invisibility.see");
 
 		saveConfig();
 	}
@@ -60,8 +66,8 @@ public class PlayerCmdCollection extends SeConAddon {
 		addLanguageInfoNode("walkspeed.changed", "<gold>You have set the walkspeed of <green><player> <gold>to <red><value>");
 		addLanguageInfoNode("heal.healed-msg", "<gold>You have been healed by <green><sender>");
 		addLanguageInfoNode("heal.sender-healed-msg", "<gold>You have healed <green><player>");
-		addLanguageInfoNode("feed.feeded-msg", "<gold>You have been fed by <green><sender>");
-		addLanguageInfoNode("feed.sender-feeded-msg", "<gold>You have fed <green><player>");
+		addLanguageInfoNode("feed.fed-msg", "<gold>You have been fed by <green><sender>");
+		addLanguageInfoNode("feed.sender-fed-msg", "<gold>You have fed <green><player>");
 		addLanguageInfoNode("nick.changed-msg", "<green><sender> <gold>has changed your nick to: <green><nick>");
 		addLanguageInfoNode("nick.sender-changed-msg", "<gold>You have changed the nick of <green><player> <gold>to <green><nick>");
 		addLanguageInfoNode("nick.too-long", "<red>Your name can't be longer than 16 characters");
@@ -76,6 +82,12 @@ public class PlayerCmdCollection extends SeConAddon {
 		addLanguageInfoNode("mute.already-muted", "<green><player> <gold>is already muted");
 		addLanguageInfoNode("mute.muted-info", "<red>You are muted!");
 		addLanguageInfoNode("mute.not-muted", "<green><player> <gold>is not muted");
+		addLanguageInfoNode("invisiblity.sender-visible-msg", "<gold>You have made <green><player> <gold>visible");
+		addLanguageInfoNode("invisiblity.visible-msg", "<green><sender> <gold>has made you visible");
+		addLanguageInfoNode("invisiblity.sender-invisible-msg", "<gold>You have made <green><player> <gold>invisible");
+		addLanguageInfoNode("invisiblity.invisible-msg", "<green><sender> <gold>has made you invisible");
+		addLanguageInfoNode("invisiblity.not-invisible-msg", "<green><player> <gold>is not invisible");
+		addLanguageInfoNode("invisiblity.not-visible-msg", "<green><player> <gold>is not visible");
 	}
 
 	@Override
@@ -93,14 +105,18 @@ public class PlayerCmdCollection extends SeConAddon {
 			initLanguage();
 			this.pcu = new PCUtils(this);
 			this.vch = new VirtualChestHandler(this);
-			try {
-				this.vch.init();
-			} catch (DatabaseException e) {
-				SeCon.getAPI().getLogger().warning("Player-Cmd-Collection", "DatabaseException occured: " + e.getMessage());
-				e.printStackTrace();
-			}
+			//			try {
+			//				this.vch.init();
+			//			} catch (DatabaseException e) {
+			//				SeCon.getAPI().getLogger().warning("Player-Cmd-Collection", "DatabaseException occured: " + e.getMessage());
+			//				e.printStackTrace();
+			//			}
+			invManager = new InvisibilityManager(this);
+			SeCon.getAPI().registerAddonAPI("InvisibilityManager", invManager);
+
 			registerCommands(new PlayerCommands(this, this.pcu));
 			registerListener(new PlayerListener(this));
+			registerListener(new EntityListener(this));
 			return true;
 		}
 	}
