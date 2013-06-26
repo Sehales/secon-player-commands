@@ -88,6 +88,11 @@ public class PlayerCmdCollection extends SeConAddon {
 		addLanguageInfoNode("invisiblity.invisible-msg", "<green><sender> <gold>has made you invisible");
 		addLanguageInfoNode("invisiblity.not-invisible-msg", "<green><player> <gold>is not invisible");
 		addLanguageInfoNode("invisiblity.not-visible-msg", "<green><player> <gold>is not visible");
+		addLanguageInfoNode("ignore.ignore-msg", "<gold>You are now ignoring <green><player>");
+		addLanguageInfoNode("ignore.already-ignored", "<red>You already ignore <green><player>");
+		addLanguageInfoNode("ignore.ignore-removed-msg", "<gold>You are no longer ignoring <green><player>");
+		addLanguageInfoNode("ignore.no-permission", "<red>You can't ignore <green><player>");
+		addLanguageInfoNode("ignore.not-ignoring", "<red>You don't ignore <green><player>");
 	}
 
 	@Override

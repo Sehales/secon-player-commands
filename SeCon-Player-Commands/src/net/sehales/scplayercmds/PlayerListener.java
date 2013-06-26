@@ -1,5 +1,8 @@
 package net.sehales.scplayercmds;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sehales.secon.SeCon;
 import net.sehales.secon.exception.DataNotFoundException;
 import net.sehales.secon.player.SeConPlayer;
@@ -24,6 +27,33 @@ public class PlayerListener implements Listener {
 	PlayerListener(PlayerCmdCollection pc) {
 		this.vch = pc.getVirtualChestHandler();
 		this.pc = pc;
+	}
+
+	@SuppressWarnings("unchecked")
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onHighestPlayerChat(AsyncPlayerChatEvent e) {
+		SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(e.getPlayer().getName());
+
+		List<String> ignoredByPlayers;
+		Object obj = null;
+		try {
+			obj = scp.getData("ignoredByPlayers");
+		} catch (DataNotFoundException ex) {
+		}
+
+		if (obj != null && obj instanceof ArrayList)
+			ignoredByPlayers = (List<String>) obj;
+		else
+			return;
+
+		if (ignoredByPlayers.size() == 0)
+			return;
+
+		for (Object rawPlayer : e.getRecipients().toArray()) {
+			Player p = (Player) rawPlayer;
+			if (ignoredByPlayers.contains(p.getName()))
+				e.getRecipients().remove(p);
+		}
 	}
 
 	@EventHandler()

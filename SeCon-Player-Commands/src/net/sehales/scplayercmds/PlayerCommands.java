@@ -1,13 +1,17 @@
 package net.sehales.scplayercmds;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.sehales.secon.SeCon;
 import net.sehales.secon.addon.SeConAddonManager;
 import net.sehales.secon.addon.SeConCommand;
 import net.sehales.secon.annotations.SeConCommandHandler;
 import net.sehales.secon.config.LanguageHelper;
+import net.sehales.secon.enums.CommandType;
 import net.sehales.secon.exception.CommandNotFoundException;
+import net.sehales.secon.exception.DataNotFoundException;
 import net.sehales.secon.player.SeConPlayer;
 import net.sehales.secon.utils.ChatUtils;
 
@@ -256,6 +260,47 @@ public class PlayerCommands {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@SeConCommandHandler(name = "ignore", help = "<darkaqua>ignore all messages by another player;<darkaqua>usage: /ignore [player]", permission = "secon.command.ignore", type = CommandType.PLAYER, additionalPerms = "exempt:secon.command.ignore.exempt")
+	public void onIgnoreCmd(Player player, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+
+			Player p = Bukkit.getPlayer(args[0]);
+			if (p == null) {
+				chat.sendFormattedMessage(player, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+				return;
+			}
+
+			if (SeCon.getAPI().getSeConUtils().hasPermission(p, cmd.getPermission("exempt"), false)) {
+				chat.sendFormattedMessage(player, pc.getLanguageInfoNode("ignore.no-permission").replace("<player>", p.getName()));
+				return;
+			}
+			SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(p.getName());
+
+			ArrayList<String> ignoredByPlayers;
+			Object obj = null;
+
+			try {
+				obj = scp.getData("ignoredByPlayers");
+			} catch (DataNotFoundException e) {
+			}
+
+			if (obj != null && obj instanceof List)
+				ignoredByPlayers = (ArrayList<String>) obj;
+			else
+				ignoredByPlayers = new ArrayList<String>();
+
+			if (!ignoredByPlayers.contains(player.getName())) {
+				ignoredByPlayers.add(player.getName());
+				chat.sendFormattedMessage(player, pc.getLanguageInfoNode("ignore-msg").replace("<player>", p.getName()));
+			} else
+				chat.sendFormattedMessage(player, pc.getLanguageInfoNode("ignore.already-ignored").replace("<player>", p.getName()));
+
+			scp.setData("ignoredByPlayers", ignoredByPlayers);
+		} else
+			chat.sendFormattedMessage(player, LanguageHelper.INFO_WRONG_ARGUMENTS);
+	}
+
 	@SeConCommandHandler(name = "invisibility", help = "<darkaqua>make yourself or another player invisible;<darkaqua>usage: /invisibility [player]", aliases = "inv,vanish", permission = "secon.command.invisibility", additionalPerms = "other:secon.command.invisibility.other")
 	public void onInvisibilityCmd(CommandSender sender, SeConCommand cmd, String[] args) {
 		if (args.length > 0) {
@@ -463,6 +508,43 @@ public class PlayerCommands {
 			}
 		} else
 			chat.sendFormattedMessage(sender, LanguageHelper.INFO_WRONG_ARGUMENTS);
+	}
+
+	@SuppressWarnings("unchecked")
+	@SeConCommandHandler(name = "unignore", help = "<darkaqua>no longer ignore all messages by another player;<darkaqua>usage: /unignore [player]", permission = "secon.command.unignore", type = CommandType.PLAYER)
+	public void onUnIgnoreCmd(Player player, SeConCommand cmd, String[] args) {
+		if (args.length > 0) {
+
+			Player p = Bukkit.getPlayer(args[0]);
+			if (p == null) {
+				chat.sendFormattedMessage(player, LanguageHelper.INFO_PLAYER_NOT_EXIST.replace("<player>", args[0]));
+				return;
+			}
+
+			SeConPlayer scp = SeCon.getAPI().getPlayerManager().getPlayer(player.getName());
+
+			ArrayList<String> ignoredPlayers;
+			Object obj = null;
+
+			try {
+				obj = scp.getData("ignoredPlayers");
+			} catch (DataNotFoundException e) {
+			}
+
+			if (obj != null && obj instanceof ArrayList)
+				ignoredPlayers = (ArrayList<String>) obj;
+			else
+				ignoredPlayers = new ArrayList<String>();
+
+			if (ignoredPlayers.contains(p.getName())) {
+				ignoredPlayers.remove(p.getName());
+				chat.sendFormattedMessage(player, pc.getLanguageInfoNode("ignore-removed-msg").replace("<player>", p.getName()));
+			} else
+				chat.sendFormattedMessage(player, pc.getLanguageInfoNode("ignore.not-ignoring").replace("<player>", p.getName()));
+
+			scp.setData("ignoredPlayers", ignoredPlayers);
+		} else
+			chat.sendFormattedMessage(player, LanguageHelper.INFO_WRONG_ARGUMENTS);
 	}
 
 	@SeConCommandHandler(name = "unmute", help = "<darkaqua>unmute another player;<darkaqua>usage: /unmute [player]", permission = "secon.command.unmute")

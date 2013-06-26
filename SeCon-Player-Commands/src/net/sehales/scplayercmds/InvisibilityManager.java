@@ -7,6 +7,7 @@ import net.sehales.secon.SeCon;
 import net.sehales.secon.player.SeConPlayer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class InvisibilityManager {
@@ -18,8 +19,8 @@ public class InvisibilityManager {
 		this.pc = pc;
 	}
 
-	public boolean canSeeOthers(Player player) {
-		return SeCon.getAPI().getSeConUtils().hasPermission(player, pc.getConf().getString("permission.invisibility.see"), false);
+	public boolean canSeeOthers(CommandSender sender) {
+		return SeCon.getAPI().getSeConUtils().hasPermission(sender, pc.getConf().getString("permission.invisibility.see"), false);
 	}
 
 	public boolean hide(Player player) {

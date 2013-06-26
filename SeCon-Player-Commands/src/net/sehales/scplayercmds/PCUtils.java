@@ -1,5 +1,7 @@
 package net.sehales.scplayercmds;
 
+import java.util.regex.Pattern;
+
 import net.sehales.secon.SeCon;
 import net.sehales.secon.utils.ChatUtils;
 
@@ -11,7 +13,8 @@ public class PCUtils {
 
 	private PlayerCmdCollection pc;
 
-	private ChatUtils           chat = SeCon.getAPI().getChatUtils();
+	private ChatUtils           chat       = SeCon.getAPI().getChatUtils();
+	private Pattern             speedValue = Pattern.compile("-?\\d\\.?\\d?");
 
 	PCUtils(PlayerCmdCollection pc) {
 		this.pc = pc;
@@ -40,18 +43,20 @@ public class PCUtils {
 	}
 
 	/**
-	 * convert a string into 0, 1 or 2 survival/0 to 0 creative/1 to 1 adventure/2 to 2
+	 * convert a string into 0, 1 or 2
+	 * 
+	 * survival/0 to 0 creative/1 to 1 adventure/2 to 2
 	 * 
 	 * @param option
 	 * @return 0 to 2 for the corresponding GameMode number or -1 if the string does not contains a mode
 	 */
 	public int convertGameModeStringToInt(String option) {
 		int value = -1;
-		if (option.equalsIgnoreCase("survival") || option.equalsIgnoreCase("0") || option.equalsIgnoreCase("s"))
+		if (option.startsWith("s") || option.equalsIgnoreCase("0"))
 			value = 0;
-		else if (option.equalsIgnoreCase("creative") || option.equalsIgnoreCase("1") || option.equalsIgnoreCase("c"))
+		else if (option.startsWith("c") || option.equalsIgnoreCase("1"))
 			value = 1;
-		else if (option.equalsIgnoreCase("adventure") || option.equalsIgnoreCase("2") || option.equalsIgnoreCase("a"))
+		else if (option.startsWith("a") || option.equalsIgnoreCase("2"))
 			value = 2;
 		return value;
 	}
@@ -91,8 +96,15 @@ public class PCUtils {
 	}
 
 	public float parseSpeedValue(String option) {
-		int i = Integer.parseInt(option);
-		switch (i) {
+
+		if (!speedValue.matcher(option).matches())
+			return 1.0f;
+		float f = Float.parseFloat(option);
+
+		if (f <= 1 && f >= -1)
+			return f;
+
+		switch ((int) f) {
 			case 0: {
 				return 0.0f;
 			}
@@ -157,7 +169,7 @@ public class PCUtils {
 				return -1.0f;
 			}
 		}
-		return 1.0f;
+		return 0.1f;
 	}
 
 	/**
