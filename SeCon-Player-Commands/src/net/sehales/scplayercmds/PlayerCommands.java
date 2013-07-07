@@ -121,7 +121,7 @@ public class PlayerCommands {
 			}
 		} else if (sender instanceof Player) {
 			Player p = ((Player) sender).getPlayer();
-			p.setSaturation(20);
+			p.setFoodLevel(20);
 			chat.sendFormattedMessage(p, pc.getLanguageInfoNode("feed.fed-msg").replace("<sender>", sender.getName()));
 		}
 	}
