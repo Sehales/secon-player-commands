@@ -3,7 +3,7 @@ package net.sehales.scplayercmds;
 
 import java.util.regex.Pattern;
 
-import net.sehales.secon.utils.mc.ChatUtils;
+import net.sehales.secon.utils.chat.ChatUtils;
 
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;

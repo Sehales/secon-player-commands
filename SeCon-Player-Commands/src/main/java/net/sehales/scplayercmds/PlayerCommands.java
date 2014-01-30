@@ -11,7 +11,7 @@ import net.sehales.secon.command.SeConCommand;
 import net.sehales.secon.config.LanguageConfig;
 import net.sehales.secon.player.SCPlayer;
 import net.sehales.secon.utils.MiscUtils;
-import net.sehales.secon.utils.mc.ChatUtils;
+import net.sehales.secon.utils.chat.ChatUtils;
 import net.sehales.secon.utils.string.StringUtils;
 
 import org.bukkit.Bukkit;

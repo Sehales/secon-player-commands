@@ -9,7 +9,7 @@ import net.sehales.secon.events.PlayerOfflineEvent;
 import net.sehales.secon.events.PlayerOnlineEvent;
 import net.sehales.secon.player.SCPlayer;
 import net.sehales.secon.utils.MiscUtils;
-import net.sehales.secon.utils.mc.ChatUtils;
+import net.sehales.secon.utils.chat.ChatUtils;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
