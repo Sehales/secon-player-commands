@@ -32,7 +32,7 @@ public class PlayerCommands {
         this.secon = SeCon.getInstance();
     }
     
-    @MethodCommandHandler(name = "chat", description = "<darkaqua>chat as another player", usage = "<darkaqua>/chat [player] Hello!", permission = "secon.command.chat", aliases = "chatas,forcechat")
+    @MethodCommandHandler(name = "chat", description = "<darkaqua>chat as another player", usage = "<darkaqua>/chat [player] Hello!", permission = "secon.command.chat", aliases = { "chatas", "forcechat" })
     public void onChatCommand(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             Player p = Bukkit.getPlayer(args[0]);
@@ -46,7 +46,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "checkvisibility", description = "<darkaqua>check the invisiblity state of a player", usage = "<darkaqua>/checkvisibility [player]", permission = "secon.command.checkvisibility", aliases = "isvisible,isinvisible,ishidden")
+    @MethodCommandHandler(name = "checkvisibility", description = "<darkaqua>check the invisiblity state of a player", usage = "<darkaqua>/checkvisibility [player]", permission = "secon.command.checkvisibility", aliases = { "isvisible", "isinvisible", "ishidden" })
     public void onCheckVisibilityCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             Player p = Bukkit.getPlayer(args[0]);
@@ -63,7 +63,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "closeview", description = "<darkaqua>close the inventory (view) of a player", usage = "<darkaqua>/closeview [player]", permission = "secon.command.closeview", aliases = "closeinventory")
+    @MethodCommandHandler(name = "closeview", description = "<darkaqua>close the inventory (view) of a player", usage = "<darkaqua>/closeview [player]", permission = "secon.command.closeview", aliases = { "closeinventory" })
     public void onCloseViewCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             Player p = Bukkit.getPlayer(args[0]);
@@ -77,7 +77,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "enchantmenttable", description = "<darkaqua>open an enchantmenttable for you or for another player", usage = "<darkaqua>/enchantmenttable [player]", additionalPerms = "other:secon.command.enchantmenttable.other", permission = "secon.command.enchantmenttable", aliases = "et,etable,enchanttable")
+    @MethodCommandHandler(name = "enchantmenttable", description = "<darkaqua>open an enchantmenttable for you or for another player", usage = "<darkaqua>/enchantmenttable [player]", additionalPerms = "other:secon.command.enchantmenttable.other", permission = "secon.command.enchantmenttable", aliases = { "et", "etable", "enchanttable" })
     public void onEnchantmentTableCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
@@ -94,7 +94,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "enderchest", description = "<darkaqua>open your enderchest or the enderchest of another player", usage = "<darkaqua>/enderchest [player]", additionalPerms = "other:secon.command.enderchest.other", permission = "secon.command.enderchest", aliases = "ec")
+    @MethodCommandHandler(name = "enderchest", description = "<darkaqua>open your enderchest or the enderchest of another player", usage = "<darkaqua>/enderchest [player]", additionalPerms = "other:secon.command.enderchest.other", permission = "secon.command.enderchest", aliases = { "ec" })
     public void onEnderchestCmd(Player sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
@@ -131,7 +131,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "flymode", description = "<darkaqua>enable or disable flymode for you or another player", usage = "<darkaqua>/flymode [player]", additionalPerms = "other:secon.command.flymode.other", permission = "secon.command.flymode", aliases = "fly,togglefly")
+    @MethodCommandHandler(name = "flymode", description = "<darkaqua>enable or disable flymode for you or another player", usage = "<darkaqua>/flymode [player]", additionalPerms = "other:secon.command.flymode.other", permission = "secon.command.flymode", aliases = { "fly", "togglefly" })
     public void onFlymodeCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
@@ -148,7 +148,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "flyspeed", description = "<darkaqua>modify your flyspeed or the flyspeed of another player", usage = "<darkaqua>/flyspeed [player] 10", additionalPerms = "other:secon.command.flyspeed.other", permission = "secon.command.flyspeed", aliases = "fspeed")
+    @MethodCommandHandler(name = "flyspeed", description = "<darkaqua>modify your flyspeed or the flyspeed of another player", usage = "<darkaqua>/flyspeed [player] 10", additionalPerms = "other:secon.command.flyspeed.other", permission = "secon.command.flyspeed", aliases = { "fspeed" })
     public void onFlySpeedCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (args.length > 1) {
@@ -175,7 +175,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "gamemode", description = "<darkaqua>change the gamemode of yourself or another player;<darkaqua>/gamemode [player] [survival|creative|adventure|0|1|2]", usage = "<darkaqua>/gamemode [survival|creative|...]", additionalPerms = "other:secon.command.gamemode.other", permission = "secon.command.gamemode", aliases = "gm")
+    @MethodCommandHandler(name = "gamemode", description = "<darkaqua>change the gamemode of yourself or another player;<darkaqua>/gamemode [player] [survival|creative|adventure|0|1|2]", usage = "<darkaqua>/gamemode [survival|creative|...]", additionalPerms = "other:secon.command.gamemode.other", permission = "secon.command.gamemode", aliases = { "gm" })
     public void onGameModeCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             Player p;
@@ -308,7 +308,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "invisibility", description = "<darkaqua>make yourself or another player invisible", usage = "<darkaqua>/invisibility [player]", aliases = "inv,vanish", permission = "secon.command.invisibility", additionalPerms = "other:secon.command.invisibility.other")
+    @MethodCommandHandler(name = "invisibility", description = "<darkaqua>make yourself or another player invisible", usage = "<darkaqua>/invisibility [player]", aliases = { "inv", "vanish" }, permission = "secon.command.invisibility", additionalPerms = "other:secon.command.invisibility.other")
     public void onInvisibilityCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
@@ -357,7 +357,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "nick", description = "<darkaqua>change your name or the name of another player", usage = "<darkaqua>/nick [player] newName", additionalPerms = "other:secon.command.nick.other", permission = "secon.command.nick", aliases = "playername")
+    @MethodCommandHandler(name = "nick", description = "<darkaqua>change your name or the name of another player", usage = "<darkaqua>/nick [player] newName", additionalPerms = "other:secon.command.nick.other", permission = "secon.command.nick", aliases = { "playername" })
     public void onNickCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (args.length > 1) {
@@ -403,7 +403,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "resetnick", description = "<darkaqua>reset your name or the name of another player", usage = "<darkaqua>/resetnick [player]", additionalPerms = "other:secon.command.resetnick.other", permission = "secon.command.resetnick", aliases = "resetname")
+    @MethodCommandHandler(name = "resetnick", description = "<darkaqua>reset your name or the name of another player", usage = "<darkaqua>/resetnick [player]", additionalPerms = "other:secon.command.resetnick.other", permission = "secon.command.resetnick", aliases = { "resetname" })
     public void onResetNickCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
@@ -456,7 +456,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "slay", description = "<darkaqua>kill another player or yourself", usage = "<darkaqua>/slay [player]", permission = "secon.command.slay", additionalPerms = "other:secon.command.slay.other", aliases = "kill")
+    @MethodCommandHandler(name = "slay", description = "<darkaqua>kill another player or yourself", usage = "<darkaqua>/slay [player]", permission = "secon.command.slay", additionalPerms = "other:secon.command.slay.other", aliases = { "kill" })
     public void onSlayCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
@@ -475,7 +475,7 @@ public class PlayerCommands {
     }
     
     // TODO:
-    @MethodCommandHandler(name = "sudo", description = "<darkaqua>execute a command as another player or as console;", usage = "<darkaqua>/sudo [-u] [player] say Hello!", additionalPerms = "console:secon.command.sudo.console,user:secon.command.sudo.user", permission = "secon.command.sudo", aliases = "executeas,exec,runas,force")
+    @MethodCommandHandler(name = "sudo", description = "<darkaqua>execute a command as another player or as console;", usage = "<darkaqua>/sudo [-u] [player] say Hello!", additionalPerms = "console:secon.command.sudo.console,user:secon.command.sudo.user", permission = "secon.command.sudo", aliases = { "executeas", "exec", "runas", "force" })
     public void onSudoCommand(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (args[0].equalsIgnoreCase("-u") && MiscUtils.hasPermission(sender, cmd.getPermission("user"), true)) {
@@ -576,7 +576,7 @@ public class PlayerCommands {
     // }
     // }
     
-    @MethodCommandHandler(name = "walkspeed", description = "<darkaqua>modify your walkspeed or the walkspeed of another player", usage = "<darkaqua>/walkspeed [player] 10", additionalPerms = "other:secon.command.walkspeed.other", permission = "secon.command.walkspeed", aliases = "wspeed")
+    @MethodCommandHandler(name = "walkspeed", description = "<darkaqua>modify your walkspeed or the walkspeed of another player", usage = "<darkaqua>/walkspeed [player] 10", additionalPerms = "other:secon.command.walkspeed.other", permission = "secon.command.walkspeed", aliases = { "wspeed" })
     public void onWalkSpeedCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (args.length > 1) {
@@ -603,7 +603,7 @@ public class PlayerCommands {
         }
     }
     
-    @MethodCommandHandler(name = "workbench", description = "<darkaqua>open a workbench for you or another player", usage = "<darkaqua>/workbench [player]", additionalPerms = "other:secon.command.workbench.other", permission = "secon.command.workbench", aliases = "wb,openworkbench")
+    @MethodCommandHandler(name = "workbench", description = "<darkaqua>open a workbench for you or another player", usage = "<darkaqua>/workbench [player]", additionalPerms = "other:secon.command.workbench.other", permission = "secon.command.workbench", aliases = { "wb", "openworkbench" })
     public void onWorkbenchCmd(CommandSender sender, SeConCommand cmd, String[] args) {
         if (args.length > 0) {
             if (MiscUtils.hasPermission(sender, cmd.getPermission("other"), true)) {
