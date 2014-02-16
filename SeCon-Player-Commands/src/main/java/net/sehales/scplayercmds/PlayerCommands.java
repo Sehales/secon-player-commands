@@ -193,7 +193,6 @@ public class PlayerCommands {
                         utils.setGameMode(mode, sender, p);
                     } catch (IllegalArgumentException e) {
                         ChatUtils.sendFormattedMessage(sender, lang.NOT_ENOUGH_ARGUMENTS);
-                        
                     }
                 }
             } else if (sender instanceof Player) {

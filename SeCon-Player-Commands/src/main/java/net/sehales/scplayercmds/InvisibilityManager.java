@@ -30,7 +30,7 @@ public class InvisibilityManager {
             invPlayerNames.add(player.getName());
             
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (MiscUtils.hasPermission(p, pc.getConf().getString("permission.invisibility.see"), false)) {
+                if (!MiscUtils.hasPermission(p, pc.getConf().getString("permission.invisibility.see"), false)) {
                     p.hidePlayer(player);
                 }
             }
