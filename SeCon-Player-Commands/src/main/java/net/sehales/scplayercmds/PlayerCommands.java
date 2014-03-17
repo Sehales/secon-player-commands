@@ -231,7 +231,7 @@ public class PlayerCommands {
                 }
                 p.setHealth(p.getMaxHealth());
                 ChatUtils.sendFormattedMessage(p, pc.getLanguageNode("heal.healed-msg").replace("<sender>", sender.getName()));
-                ChatUtils.sendFormattedMessage(sender, pc.getLanguageNode("heal.sender-healed-msg").replace("<player>", sender.getName()));
+                ChatUtils.sendFormattedMessage(sender, pc.getLanguageNode("heal.sender-healed-msg").replace("<player>", p.getName()));
             }
         } else if (sender instanceof Player) {
             Player p = ((Player) sender).getPlayer();
@@ -294,9 +294,9 @@ public class PlayerCommands {
                 ignoredByPlayers = new ArrayList<String>();
             }
             
-            if (!ignoredByPlayers.contains(player.getName())) {
-                ignoredByPlayers.add(player.getName());
-                ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore-msg").replace("<player>", p.getName()));
+            if (!ignoredByPlayers.contains(p.getName())) {
+                ignoredByPlayers.add(p.getName());
+                ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.ignore-msg").replace("<player>", player.getName()));
             } else {
                 ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.already-ignored").replace("<player>", p.getName()));
             }
