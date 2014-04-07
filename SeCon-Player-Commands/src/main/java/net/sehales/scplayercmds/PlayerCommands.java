@@ -294,9 +294,9 @@ public class PlayerCommands {
                 ignoredByPlayers = new ArrayList<String>();
             }
             
-            if (!ignoredByPlayers.contains(p.getName())) {
-                ignoredByPlayers.add(p.getName());
-                ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.ignore-msg").replace("<player>", player.getName()));
+            if (!ignoredByPlayers.contains(player.getName())) {
+                ignoredByPlayers.add(player.getName());
+                ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.ignore-msg").replace("<player>", p.getName()));
             } else {
                 ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.already-ignored").replace("<player>", p.getName()));
             }
@@ -508,26 +508,26 @@ public class PlayerCommands {
                 return;
             }
             
-            SCPlayer scp = secon.getPlayerManager().getPlayer(player.getName());
+            SCPlayer scp = secon.getPlayerManager().getPlayer(p.getName());
             
-            List<String> ignoredPlayers;
+            List<String> ignoredByPlayers;
             Object obj = null;
-            obj = scp.getValue("ignoredPlayers");
+            obj = scp.getTransientValue("ignoredByPlayers");
             
             if (obj != null && obj instanceof List) {
-                ignoredPlayers = (List<String>) obj;
+                ignoredByPlayers = (List<String>) obj;
             } else {
-                ignoredPlayers = new ArrayList<String>();
+                ignoredByPlayers = new ArrayList<String>();
             }
             
-            if (ignoredPlayers.contains(p.getName())) {
-                ignoredPlayers.remove(p.getName());
-                ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore-removed-msg").replace("<player>", p.getName()));
+            if (ignoredByPlayers.contains(player.getName())) {
+                ignoredByPlayers.remove(player.getName());
+                ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.ignore-removed-msg").replace("<player>", p.getName()));
             } else {
                 ChatUtils.sendFormattedMessage(player, pc.getLanguageNode("ignore.not-ignoring").replace("<player>", p.getName()));
             }
             
-            scp.putTransientData("ignoredPlayers", ignoredPlayers);
+            scp.putTransientData("ignoredByPlayers", ignoredByPlayers);
         } else {
             ChatUtils.sendFormattedMessage(player, lang.NOT_ENOUGH_ARGUMENTS);
         }

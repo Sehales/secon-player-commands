@@ -1,6 +1,7 @@
 
 package net.sehales.scplayercmds;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -146,7 +147,7 @@ public class PlayerListener implements Listener {
         String stringList = null;
         
         if (scp.hasData("ignoredByPlayers") && !((stringList = scp.getValue("ignoredByPlayers")).isEmpty())) {
-            List<String> ignoredByPlayers = Arrays.asList(stringList.split(","));
+            List<String> ignoredByPlayers = new ArrayList<String>(Arrays.asList(stringList.split(",")));
             scp.putTransientData("ignoredByPlayers", ignoredByPlayers);
         }
         
